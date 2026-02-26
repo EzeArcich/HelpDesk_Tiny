@@ -1,72 +1,105 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# HelpDesk (Mini Ticketing) – Laravel Layered / N-tier
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A compact, production-minded HelpDesk/Ticketing MVP to practice a strict layered architecture in Laravel:
 
-## About Laravel
+**Controller → UseCase/Service → Repository → DB**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+> Goal: ship a “presentable” repo with clear structure, migrations/ERD, defined endpoints, tests (Feature + Unit), CI, and docs. :contentReference[oaicite:1]{index=1}
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Badges
 
-## Learning Laravel
+![PHP](https://img.shields.io/badge/PHP-8%2B-777BB4?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12%2B-FF2D20?logo=laravel&logoColor=white)
+![REST API](https://img.shields.io/badge/API-REST-2F855A)
+![Architecture](https://img.shields.io/badge/Architecture-Layered%20%2F%20N--tier-4A5568)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
+![CI](https://img.shields.io/github/actions/workflow/status/EzeArcich/HelpDesk_Tiny/ci.yml?label=CI&logo=github)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+> 🔧 Reemplazá `<OWNER>/<REPO>` y el nombre del workflow `ci.yml` por el real.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Features (MVP)
 
-### Premium Partners
+- **Tickets**
+  - Create ticket (`subject`, `description`, `priority`)
+  - View ticket details
+  - List tickets with filters: `status`, `assignee`, `tag`, `q` (search)
+  - Change status: `open → in_progress → closed`
+- **Comments**
+  - Add comment to ticket
+  - `visibility`: `public | internal`
+- **Assignment**
+  - Assign a ticket to an agent (user)
+- **Tags** (optional)
+  - Many-to-many ticket ↔ tags
+- **Audit trail**
+  - Activity log for events like `status_changed`, `assigned`, `commented`, `tagged` :contentReference[oaicite:2]{index=2}
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Out of scope: real-time, SLA, multi-tenant, full-text search, attachments (stretch goals later). :contentReference[oaicite:3]{index=3}
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Architecture (Layered / N-tier)
 
-## Code of Conduct
+**Rules**
+- Controllers: HTTP only (no business logic)
+- Application: UseCases orchestrate flows + transactions
+- Domain: entities/enums/contracts/rules (framework-agnostic)
+- Infrastructure: Eloquent models + repository implementations
+- **Never leak Eloquent Models upward**. If needed, use DTOs. :contentReference[oaicite:4]{index=4}
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+:contentReference[oaicite:5]{index=5}
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Database schema (tables)
 
-## License
+- `users` (role: `customer|agent|admin`)
+- `tickets` (requester_id, assignee_id, status, priority, …)
+- `comments` (ticket_id, author_id, visibility)
+- `tags`
+- `ticket_tag` (pivot)
+- `ticket_activities` (audit log + `meta` json) :contentReference[oaicite:6]{index=6}
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
 
-## Seed de datos HelpDesk
+## API
 
-Para poblar la base con datos de ejemplo realistas para dashboard, filtros y listados:
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/tickets` | List + filters (`status`, `assignee`, `tag`, `q`) |
+| POST | `/api/tickets` | Create ticket |
+| GET | `/api/tickets/{id}` | Ticket details |
+| POST | `/api/tickets/{id}/assign` | Assign ticket |
+| POST | `/api/tickets/{id}/status` | Change status |
+| POST | `/api/tickets/{id}/comments` | Add comment |
+| POST | `/api/tickets/{id}/tags` | Tag ticket (optional) | :contentReference[oaicite:7]{index=7}
+
+---
+
+## Local setup
+
+### Requirements
+- PHP 8+
+- Composer
+- A DB (SQLite/MySQL/Postgres; configurable via `.env`)
+
+### Install
 
 ```bash
-php artisan migrate:fresh --seed
-```
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
 
-Credenciales de ejemplo:
+(Optional) seed data if the project includes seeders:
+php artisan db:seed
 
-- Admin: `admin@example.com`
-- Password: `password`
+Run all tests:
+php artisan test
+
