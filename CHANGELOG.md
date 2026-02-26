@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/EzeArcich/HelpDesk_Tiny/compare/v1.0.0...v1.1.0) (2026-02-26)
+
+
+### Features
+
+* **auth/dashboard:** adjust auth logic, views. app.blade styles, main view dashboard is added ([20afc94](https://github.com/EzeArcich/HelpDesk_Tiny/commit/20afc942f71d51a6027df77db3f46f7798032944))
+
 ## 1.0.0 (2026-02-26)
 
 
