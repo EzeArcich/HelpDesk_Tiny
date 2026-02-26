@@ -1,7 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-4" id="ticketsDashboard" data-current-user-id="{{ auth()->id() }}" data-api-base="/api">
+@php
+    $initialTickets = ($tickets ?? collect())->map(fn ($ticket) => [
+        'id' => $ticket->id,
+        'subject' => $ticket->subject,
+        'status' => $ticket->status,
+        'priority' => $ticket->priority,
+        'requester_id' => $ticket->requester_id,
+        'assignee_id' => $ticket->assignee_id,
+        'updated_at' => optional($ticket->updated_at)?->toDateTimeString(),
+        'updated_at_human' => optional($ticket->updated_at)?->diffForHumans(),
+        'requester' => $ticket->requester ? ['id' => $ticket->requester->id, 'name' => $ticket->requester->name] : null,
+        'assignee' => $ticket->assignee ? ['id' => $ticket->assignee->id, 'name' => $ticket->assignee->name] : null,
+        'tags' => $ticket->tags->map(fn ($tag) => ['id' => $tag->id, 'name' => $tag->name])->values()->all(),
+    ])->values();
+@endphp
+<div class="container py-4" id="ticketsDashboard" data-current-user-id="{{ auth()->id() }}" data-api-base="/api" data-initial-tickets='@json($initialTickets)'>
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
         <div>
             <h1 class="h3 mb-1">Dashboard</h1>
@@ -110,9 +125,29 @@
                         </tr>
                     </thead>
                     <tbody id="ticketsTableBody">
-                        <tr>
-                            <td colspan="7" class="text-center text-secondary py-5">Aplica filtros para comenzar.</td>
-                        </tr>
+                        @forelse (($tickets ?? collect()) as $ticket)
+                            <tr data-ticket-id="{{ $ticket->id }}" role="button">
+                                <td>#{{ $ticket->id }}</td>
+                                <td class="fw-semibold">{{ $ticket->subject }}</td>
+                                <td>{{ $ticket->requester?->name ?? '-' }}</td>
+                                <td>{{ $ticket->assignee?->name ?? 'Unassigned' }}</td>
+                                <td>
+                                    <span class="badge {{ $ticket->status === 'open' ? 'text-bg-warning' : ($ticket->status === 'in_progress' ? 'text-bg-primary' : 'text-bg-success') }}">
+                                        {{ $ticket->status === 'in_progress' ? 'In progress' : ucfirst($ticket->status) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge {{ $ticket->priority === 'urgent' ? 'text-bg-danger' : ($ticket->priority === 'high' ? 'text-bg-warning' : ($ticket->priority === 'medium' ? 'text-bg-secondary' : 'text-bg-light')) }}">
+                                        {{ ucfirst($ticket->priority) }}
+                                    </span>
+                                </td>
+                                <td class="text-secondary">{{ $ticket->updated_at?->diffForHumans() ?? '-' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center text-secondary py-5">No hay tickets cargados.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
