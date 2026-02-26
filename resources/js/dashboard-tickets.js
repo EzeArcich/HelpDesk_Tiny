@@ -58,6 +58,14 @@ const initDashboardTickets = () => {
 
     const currentUserId = Number(root.dataset.currentUserId || 0);
     const apiBase = root.dataset.apiBase || '/api';
+    const initialTickets = (() => {
+        try {
+            const parsed = JSON.parse(root.dataset.initialTickets || '[]');
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            return [];
+        }
+    })();
     const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
     const els = {
@@ -106,6 +114,9 @@ const initDashboardTickets = () => {
     const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(els.offcanvasEl);
 
     const state = {
+        allTickets: initialTickets,
+        useLocalData: initialTickets.length > 0,
+        perPage: 20,
         page: 1,
         filters: {
             q: '',
@@ -120,6 +131,46 @@ const initDashboardTickets = () => {
         currentTicket: null,
         assignees: [],
         tags: [],
+    };
+
+    const loadLocalTickets = () => {
+        let filtered = state.allTickets.slice();
+
+        if (state.filters.q) {
+            const term = state.filters.q.toLowerCase();
+            filtered = filtered.filter((ticket) => (
+                text(ticket.subject, '').toLowerCase().includes(term)
+                || text(ticket.requester?.name || ticket.requester_name, '').toLowerCase().includes(term)
+                || text(ticket.assignee?.name || ticket.assignee_name, '').toLowerCase().includes(term)
+            ));
+        }
+
+        if (state.filters.status) {
+            filtered = filtered.filter((ticket) => ticket.status === state.filters.status);
+        }
+
+        if (state.filters.priority) {
+            filtered = filtered.filter((ticket) => ticket.priority === state.filters.priority);
+        }
+
+        if (state.filters.assignee) {
+            filtered = filtered.filter((ticket) => String(ticket.assignee_id || ticket.assignee?.id || '') === String(state.filters.assignee));
+        }
+
+        if (state.filters.tag) {
+            filtered = filtered.filter((ticket) => (ticket.tags || []).some((tag) => (
+                String(typeof tag === 'string' ? tag : tag.name).toLowerCase() === String(state.filters.tag).toLowerCase()
+            )));
+        }
+
+        const total = filtered.length;
+        const lastPage = Math.max(1, Math.ceil(total / state.perPage));
+        const currentPage = Math.min(Math.max(1, state.page), lastPage);
+        const start = (currentPage - 1) * state.perPage;
+        const end = start + state.perPage;
+
+        state.tickets = filtered.slice(start, end);
+        state.meta = { current_page: currentPage, last_page: lastPage, total };
     };
 
     const apiFetch = async (path, options = {}) => {
@@ -267,6 +318,16 @@ const initDashboardTickets = () => {
     };
 
     const loadTickets = async () => {
+        if (state.useLocalData) {
+            loadLocalTickets();
+            showTicketsError();
+            renderKPIs();
+            updateFilterOptions();
+            renderTable();
+            renderPagination();
+            return;
+        }
+
         setTicketsLoading(true);
         showTicketsError();
 
@@ -281,11 +342,21 @@ const initDashboardTickets = () => {
             renderTable();
             renderPagination();
         } catch (error) {
-            state.tickets = [];
-            state.meta = { current_page: 1, last_page: 1, total: 0 };
-            renderTable();
-            renderPagination();
-            showTicketsError(error.message);
+            if (state.allTickets.length > 0) {
+                state.useLocalData = true;
+                loadLocalTickets();
+                renderKPIs();
+                updateFilterOptions();
+                renderTable();
+                renderPagination();
+                showTicketsError();
+            } else {
+                state.tickets = [];
+                state.meta = { current_page: 1, last_page: 1, total: 0 };
+                renderTable();
+                renderPagination();
+                showTicketsError(error.message);
+            }
         } finally {
             setTicketsLoading(false);
         }
@@ -582,7 +653,15 @@ const initDashboardTickets = () => {
         }
     });
 
-    loadTickets();
+    if (state.allTickets.length > 0) {
+        loadLocalTickets();
+        renderKPIs();
+        updateFilterOptions();
+        renderTable();
+        renderPagination();
+    } else {
+        loadTickets();
+    }
 };
 
 if (document.readyState === 'loading') {

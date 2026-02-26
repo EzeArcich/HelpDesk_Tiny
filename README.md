@@ -57,3 +57,16 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Seed de datos HelpDesk
+
+Para poblar la base con datos de ejemplo realistas para dashboard, filtros y listados:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+Credenciales de ejemplo:
+
+- Admin: `admin@example.com`
+- Password: `password`
