@@ -1,0 +1,66 @@
+Table users {
+  id bigint [pk, increment]
+  name varchar
+  email varchar [unique]
+  password varchar
+  role varchar // customer|agent|admin
+  created_at datetime
+  updated_at datetime
+}
+
+Table tickets {
+  id bigint [pk, increment]
+  requester_id bigint
+  assignee_id bigint [null]
+  subject varchar
+  description text
+  status varchar // open|in_progress|closed
+  priority varchar // low|medium|high|urgent
+  closed_at datetime [null]
+  created_at datetime
+  updated_at datetime
+}
+
+Table comments {
+  id bigint [pk, increment]
+  ticket_id bigint
+  author_id bigint
+  body text
+  visibility varchar // public|internal
+  created_at datetime
+  updated_at datetime
+}
+
+Table tags {
+  id bigint [pk, increment]
+  name varchar [unique]
+  created_at datetime
+  updated_at datetime
+}
+
+Table ticket_tag {
+  ticket_id bigint
+  tag_id bigint
+
+  indexes {
+    (ticket_id, tag_id) [pk]
+  }
+}
+
+Table ticket_activities {
+  id bigint [pk, increment]
+  ticket_id bigint
+  actor_id bigint [null]
+  type varchar // created|assigned|status_changed|commented|tagged
+  meta json [null]
+  created_at datetime
+}
+
+Ref: tickets.requester_id > users.id
+Ref: tickets.assignee_id > users.id
+Ref: comments.ticket_id > tickets.id
+Ref: comments.author_id > users.id
+Ref: ticket_activities.ticket_id > tickets.id
+Ref: ticket_activities.actor_id > users.id
+Ref: ticket_tag.ticket_id > tickets.id
+Ref: ticket_tag.tag_id > tags.id
