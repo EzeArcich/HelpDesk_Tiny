@@ -19,8 +19,6 @@ A compact, production-minded HelpDesk/Ticketing MVP to practice a strict layered
 ![CI](https://img.shields.io/github/actions/workflow/status/EzeArcich/HelpDesk_Tiny/ci.yml?label=CI&logo=github)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-> 🔧 Reemplazá `<OWNER>/<REPO>` y el nombre del workflow `ci.yml` por el real.
-
 ---
 
 ## Features (MVP)
