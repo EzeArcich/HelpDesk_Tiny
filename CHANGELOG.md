@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/EzeArcich/HelpDesk_Tiny/compare/v1.1.0...v1.2.0) (2026-02-26)
+
+
+### Features
+
+* **dashboard:** dashboard print the tickets - Factories and seeders added too ([678bb46](https://github.com/EzeArcich/HelpDesk_Tiny/commit/678bb4690e17cb01e06406874ef7a521e42d651a))
+
 ## [1.1.0](https://github.com/EzeArcich/HelpDesk_Tiny/compare/v1.0.0...v1.1.0) (2026-02-26)
 
 
