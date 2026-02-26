@@ -1,1 +1,48 @@
-@import "bootstrap/dist/css/bootstrap.min.css";
+:root {
+    --bs-primary: #7c3aed;
+    --bs-secondary: #334155;
+    --bs-success: #22c55e;
+    --bs-warning: #f97316;
+    --bs-danger: #ef4444;
+    --bs-light: #f8fafc;
+    --bs-dark: #111827;
+
+    --bs-primary-rgb: 124, 58, 237;
+    --bs-secondary-rgb: 51, 65, 85;
+    --bs-success-rgb: 34, 197, 94;
+    --bs-warning-rgb: 249, 115, 22;
+    --bs-danger-rgb: 239, 68, 68;
+    --bs-light-rgb: 248, 250, 252;
+    --bs-dark-rgb: 17, 24, 39;
+
+    --bs-link-color: #7c3aed;
+    --bs-link-hover-color: #6931cf;
+}
+
+body {
+    background-color: #f8fafc;
+}
+
+.table-hover > tbody > tr:hover > * {
+    background-color: rgba(var(--bs-primary-rgb), 0.06);
+}
+
+#ticketsDashboard .card {
+    border-color: #e7ebf3;
+}
+
+#ticketsDashboard .offcanvas {
+    --bs-offcanvas-width: min(560px, 96vw);
+}
+
+#ticketsDashboard .badge.text-bg-light {
+    border: 1px solid #e2e8f0;
+}
+
+#ticketsDashboard .btn-outline-secondary {
+    --bs-btn-color: #334155;
+    --bs-btn-border-color: #cbd5e1;
+    --bs-btn-hover-bg: #334155;
+    --bs-btn-hover-border-color: #334155;
+    --bs-btn-hover-color: #fff;
+}

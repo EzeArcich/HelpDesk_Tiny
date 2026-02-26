@@ -1,0 +1,31 @@
+// Design tokens (source of truth)
+:root {
+    --color-primary: #7c3aed;
+    --color-secondary: #334155;
+    --color-success: #22c55e;
+    --color-warning: #f97316;
+    --color-danger: #ef4444;
+    --color-light: #f8fafc;
+    --color-dark: #111827;
+
+    --on-primary: #ffffff;
+    --on-secondary: #ffffff;
+    --on-success: #111827;
+    --on-warning: #111827;
+    --on-danger: #ffffff;
+    --on-light: #111827;
+    --on-dark: #ffffff;
+}
+
+// Bootstrap palette override (upgrade-safe, no vendor edits)
+$primary: #7c3aed;
+$secondary: #334155;
+$success: #22c55e;
+$warning: #f97316;
+$danger: #ef4444;
+$light: #f8fafc;
+$dark: #111827;
+
+// Keep readable text contrast in generated components (btn/badge/alerts)
+$color-contrast-dark: #111827;
+$color-contrast-light: #ffffff;
