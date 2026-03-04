@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/EzeArcich/HelpDesk_Tiny/compare/v1.4.0...v1.5.0) (2026-03-04)
+
+
+### Features
+
+* **ticket by id:** ticket get-by-id like ([89e6e99](https://github.com/EzeArcich/HelpDesk_Tiny/commit/89e6e9938355e9688f0464eff3e4ff119ef2b725))
+
 ## [1.4.0](https://github.com/EzeArcich/HelpDesk_Tiny/compare/v1.3.0...v1.4.0) (2026-03-01)
 
 
