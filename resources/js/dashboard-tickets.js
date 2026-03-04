@@ -58,6 +58,7 @@ const initDashboardTickets = () => {
 
     const currentUserId = Number(root.dataset.currentUserId || 0);
     const apiBase = root.dataset.apiBase || '/api';
+    const ticketShowBase = root.dataset.ticketShowBase || '/tickets/__ID__';
     const initialTickets = (() => {
         try {
             const parsed = JSON.parse(root.dataset.initialTickets || '[]');
@@ -111,7 +112,9 @@ const initDashboardTickets = () => {
         tagInput: document.getElementById('tagInput'),
     };
 
-    const offcanvas = bootstrap.Offcanvas.getOrCreateInstance(els.offcanvasEl);
+    const offcanvas = (window.bootstrap && els.offcanvasEl)
+        ? window.bootstrap.Offcanvas.getOrCreateInstance(els.offcanvasEl)
+        : null;
 
     const state = {
         allTickets: initialTickets,
@@ -131,6 +134,15 @@ const initDashboardTickets = () => {
         currentTicket: null,
         assignees: [],
         tags: [],
+    };
+
+    const buildTicketShowUrl = (ticket) => {
+        if (ticket?.show_url) {
+            return String(ticket.show_url);
+        }
+
+        const ticketId = ticket?.id ?? '';
+        return ticketShowBase.replace('__ID__', String(ticketId));
     };
 
     const loadLocalTickets = () => {
@@ -252,9 +264,10 @@ const initDashboardTickets = () => {
                 const statusClass = statusBadgeClass[ticket.status] || 'text-bg-secondary';
                 const priorityClass = priorityBadgeClass[ticket.priority] || 'text-bg-secondary';
                 const id = ticket.id;
+                const showUrl = buildTicketShowUrl(ticket);
 
                 return `
-                    <tr data-ticket-id="${id}" role="button">
+                    <tr data-ticket-id="${id}" data-ticket-url="${escapeHtml(showUrl)}" role="button">
                         <td>#${id}</td>
                         <td class="fw-semibold">${escapeHtml(text(ticket.subject))}</td>
                         <td>${escapeHtml(text(ticket.requester?.name || ticket.requester_name, '-'))}</td>
@@ -432,7 +445,7 @@ const initDashboardTickets = () => {
         state.currentTicketId = ticketId;
         clearDetailAlert();
         setDetailLoading(true);
-        offcanvas.show();
+        offcanvas?.show();
 
         try {
             const data = await apiFetch(`/tickets/${ticketId}`);
@@ -519,10 +532,9 @@ const initDashboardTickets = () => {
         const row = e.target.closest('tr[data-ticket-id]');
         if (!row) return;
 
-        const id = Number(row.dataset.ticketId);
-        if (!Number.isFinite(id)) return;
-
-        loadTicketDetail(id);
+        const targetUrl = row.dataset.ticketUrl;
+        if (!targetUrl) return;
+        window.location.assign(targetUrl);
     });
 
     els.statusForm.addEventListener('submit', async (e) => {

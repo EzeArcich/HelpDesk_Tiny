@@ -115,7 +115,7 @@
                         <ul class="navbar-nav me-auto gap-md-1">
                             @auth
                                 <li class="nav-item">
-                                    <a class="nav-link hd-link {{ request()->routeIs('dashboard') ? 'hd-link-active' : '' }}" href="{{ route('dashboard') }}">
+                                    <a class="nav-link hd-link {{ request()->routeIs('dashboard') || request()->routeIs('tickets.*') ? 'hd-link-active' : '' }}" href="{{ route('dashboard') }}">
                                         Tickets
                                     </a>
                                 </li>
