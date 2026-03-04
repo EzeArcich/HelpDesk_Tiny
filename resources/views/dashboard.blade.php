@@ -4,6 +4,7 @@
 @php
     $initialTickets = ($tickets ?? collect())->map(fn ($ticket) => [
         'id' => $ticket->id,
+        'show_url' => route('tickets.show', $ticket),
         'subject' => $ticket->subject,
         'status' => $ticket->status,
         'priority' => $ticket->priority,
@@ -16,15 +17,15 @@
         'tags' => $ticket->tags->map(fn ($tag) => ['id' => $tag->id, 'name' => $tag->name])->values()->all(),
     ])->values();
 @endphp
-<div class="container py-4" id="ticketsDashboard" data-current-user-id="{{ auth()->id() }}" data-api-base="/api" data-initial-tickets='@json($initialTickets)'>
+<div class="container py-4" id="ticketsDashboard" data-current-user-id="{{ auth()->id() }}" data-api-base="/api" data-ticket-show-base="{{ route('tickets.show', ['ticket' => '__ID__']) }}" data-initial-tickets='@json($initialTickets)'>
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
         <div>
             <h1 class="h3 mb-1">Dashboard</h1>
             <p class="text-secondary mb-0">Gestion de tickets, asignaciones y seguimiento operativo.</p>
         </div>
-        <button type="button" class="btn btn-primary" id="btnNewTicket">
+        <a href="{{ route('tickets.create') }}" class="btn btn-primary" id="btnNewTicket">
             Nuevo ticket
-        </button>
+        </a>
     </div>
 
     <div class="row g-3 mb-4" id="kpiRow">
@@ -126,7 +127,7 @@
                     </thead>
                     <tbody id="ticketsTableBody">
                         @forelse (($tickets ?? collect()) as $ticket)
-                            <tr data-ticket-id="{{ $ticket->id }}" role="button">
+                            <tr data-ticket-id="{{ $ticket->id }}" data-ticket-url="{{ route('tickets.show', $ticket) }}" role="button">
                                 <td>#{{ $ticket->id }}</td>
                                 <td class="fw-semibold">{{ $ticket->subject }}</td>
                                 <td>{{ $ticket->requester?->name ?? '-' }}</td>

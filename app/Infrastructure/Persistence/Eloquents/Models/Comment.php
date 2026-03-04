@@ -17,7 +17,12 @@ class Comment extends Model
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'requester_id');
+        return $this->belongsTo(\App\Models\User::class, 'author_id');
+    }
+
+    public function ticket(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Ticket::class, 'ticket_id');
     }
 
 }
