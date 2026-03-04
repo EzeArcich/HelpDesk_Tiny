@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/EzeArcich/HelpDesk_Tiny/compare/v1.3.0...v1.4.0) (2026-03-01)
+
+
+### Features
+
+* **api/route:** ticket/{id} operative ([fc82ed3](https://github.com/EzeArcich/HelpDesk_Tiny/commit/fc82ed35797850e8d000f1879fa5be52e510ca93))
+
 ## [1.3.0](https://github.com/EzeArcich/HelpDesk_Tiny/compare/v1.2.0...v1.3.0) (2026-03-01)
 
 
