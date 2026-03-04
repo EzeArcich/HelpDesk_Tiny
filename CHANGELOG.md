@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/EzeArcich/HelpDesk_Tiny/compare/v1.2.0...v1.3.0) (2026-03-01)
+
+
+### Features
+
+* **flow:** api route ticket.index operative ([4b3b1df](https://github.com/EzeArcich/HelpDesk_Tiny/commit/4b3b1df54a801eba1049e88a84e0cab94497eac7))
+* **ticket list:** api route operative ticket.index ([9c7ab0b](https://github.com/EzeArcich/HelpDesk_Tiny/commit/9c7ab0b5bcbea788993b716416637dc5c0100ff8))
+
 ## [1.2.0](https://github.com/EzeArcich/HelpDesk_Tiny/compare/v1.1.0...v1.2.0) (2026-02-26)
 
 
